@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trabajo Integrador Final</title>
+    <script src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+       form {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          gap: 10px;
+          padding: 10px;
+          border: 1px solid #ccc;
+          margin: 0;
+          border-radius: 10px;
+          width: 420px;
+        }
+
+        form .acciones {
+          display: flex;
+          flex-direction: column;
+          gap: 2px
+        }
+
+        form .acciones button {
+          margin: 0px;
+          width: 100%;
+          padding: 0 4px;
+          border-radius: 10px;
+        }
+    </style>
+    <script type="text/babel">
+        const {useState} =React;
+        const {useEffect} =React;
+
+
+        const generarId = () => Number(new Date());
+
+        
+        function TaskItem({tarea}) {
+            const completar = () => alCompletar();
+            const eliminar = () =>alEliminar();
+
+            return (
+                <>
+                  <div>
+                     {tarea.nombre}
+                  </div>
+                  <div>
+                    <button onClick={completar}>completar</button>
+                    <button onClick={eliminar}>eliminar</button> 
+                  </div>
+                </>
+            );
+        }
+        function TaskForm({ tarea, alAgregar }) {
+           const [nombre, setNombre] = useState([tarea.nombre]);
+           
+
+           const ponerTarea = (e) => setNombre(e.target.value);
+
+           function agregar(e) {
+               e.preventDefault();
+               alAgregar({nombre});
+           }
+           
+           return (
+               <div>
+                   <form action="">
+                     <div>
+                     <label>Tarea</label><br />
+                     <input autoFocus type="text" value={nombre} onChange={ponerTarea} />
+                     </div>
+                     <p>{nombre}</p>
+                     <div className='acciones'>
+                       <button onClick={agregar}>Agregar tarea</button>
+                     </div>
+                    </form>
+                
+               </div>
+            );        
+        }
+
+        function TaskList() {
+
+          const [tarea, setTarea] = useState({nombre: ''});
+          const [tareas, setTareas] = useState([]);
+
+          function informar(nuevo) {
+            setTareas([...tareas, nuevo]);
+            setTarea({nombre:''});
+          }
+          return (
+            <>
+               <TaskForm tarea={tarea} alAgregar={informar}/>
+               <h1>Lista de tareas</h1>
+               <ul>
+                  {tareas.map((tarea, i) => (
+                    <li key={i}>< TaskItem tarea={tarea}/></li>
+                  ))}
+               </ul>
+            </>
+          )
+        }
+        
+        const rootElement = document.getElementById('root');
+        ReactDOM.render(< TaskList/>, rootElement);
+    </script>
+</head>
+<body>
+   <div class="root" id="root"></div> 
+</body>
+</html>
